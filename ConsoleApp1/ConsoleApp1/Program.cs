@@ -41,14 +41,24 @@ namespace CsvCode
 
         public int getDataframeSize()
         {
-            // -1 because the first row is the header
-            return DataFrame.Count() - 1;
+            return DataFrame.Count();
+        }
+
+        public List<string> getDataframe()
+        {
+            return DataFrame;
         }
         
         // CONVERSION FUNCTIONS
         public string[] ListToArray()
         {
             string[] temp = DataFrame.ToArray();
+            return temp;
+        }
+
+        public string[] ListToArray(List<string> input)
+        {
+            string[] temp = input.ToArray();
             return temp;
         }
 
@@ -98,18 +108,32 @@ namespace CsvCode
         // Param: Input to append your array/string to the bottom of the list
         public void Append(string input)
         {
+            if(DataFrame == null)
+            {
+                List<string> temp = new List<string>();
+                temp.Add(input);
+                DataFrame = temp;
+            }
+
             DataFrame.Add(input);
         }
 
         public void Append(string[] input)
         {
+            if (DataFrame == null)
+            {
+                List<string> temp = new List<string>();
+                temp.AddRange(input);
+                DataFrame = temp;
+            }
+
             DataFrame.AddRange(input);
         }
 
         // INSERT
         // Insert in a specific position
         // Param: Pos = Position in list to insert the input, Input = Input (array or string)
-
+        
         public void IndexInsert(int pos, string input)
         {
             DataFrame.Insert(pos, input);
@@ -211,6 +235,32 @@ namespace CsvCode
             /* 1 MILLION DATA TEST
              * DELETE AFTER */
 
+            var watch = new System.Diagnostics.Stopwatch();
+            watch.Start();
+            CsvDataframe df = new CsvDataframe();
+            for(int i = 0; i < 1000000; i++)
+            {
+                List<string> s = new List<string>();
+
+                for(int j = 0; j < 5; j++)
+                {
+                    s.Add(String.Format("Insert {0}", j));
+                }
+                string[] temp = df.ListToArray(s);
+                string x = df.ArrayToString(temp);
+
+                df.Append(x);
+            }
+
+            df.AppendToCsv("B:\\Downloads\\1mtest.csv");
+
+            watch.Stop();
+            Console.WriteLine("Elapsed Time for Writing: " + watch.ElapsedMilliseconds + "ms");
+
+            watch.Restart();
+            df.LoadFile("B:\\Downloads\\1mtest.csv");
+            watch.Stop();
+            Console.WriteLine("Elapsed Time for Reading: " + watch.ElapsedMilliseconds + "ms");
         }
     }
 }
