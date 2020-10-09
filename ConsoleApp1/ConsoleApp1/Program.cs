@@ -33,10 +33,33 @@ namespace CsvCode
             return temp;
         }
 
-        public string getColumn(int row, int column)
+        public string getElement(int row, int column)
         {
-            string[] temp = DataFrame[row].Split(',');
+            string[] temp = getRow(row);
             return temp[column];
+        }
+
+        //Convert dataframe to tables then return the contents of a column
+        //Slow, use sparringly
+
+        public string[] getCell(int column)
+        {
+            List<List<string>> table = new List<List<string>>();
+            List<string> output = new List<string>();
+
+            foreach(string s in DataFrame)
+            {
+                List<string> temp = new List<string>();
+                temp.AddRange(StringToArray(s));
+                table.Add(temp);
+            }
+            
+            for(int i=0; i < table.Count(); i++)
+            {
+                output.Add(table[i][column]);
+            }
+
+            return output.ToArray();
         }
 
         public int getDataframeSize()
@@ -233,7 +256,7 @@ namespace CsvCode
             //df.AppendToCsv("B:\\Downloads\\test_best.csv");
 
             /* 1 MILLION DATA TEST
-             * DELETE AFTER */
+             * DELETE AFTER
 
             var watch = new System.Diagnostics.Stopwatch();
             watch.Start();
@@ -261,6 +284,23 @@ namespace CsvCode
             df.LoadFile("B:\\Downloads\\1mtest.csv");
             watch.Stop();
             Console.WriteLine("Elapsed Time for Reading: " + watch.ElapsedMilliseconds + "ms");
+            */
+
+            //Get cell
+            var watch = new System.Diagnostics.Stopwatch();
+            CsvDataframe csv = new CsvDataframe();
+            csv.LoadFile("B:\\Downloads\\test_best.csv");
+
+            watch.Start();
+            string[] temp = csv.getCell(1);
+            watch.Stop();
+            
+            foreach (string s in temp)
+            {
+                Console.WriteLine(s);
+            }
+
+            Console.WriteLine("Elapsed time for get cell function: " + watch.ElapsedMilliseconds + "ms");
         }
     }
 }
