@@ -42,7 +42,7 @@ namespace CsvCode
         //Convert dataframe to tables then return the contents of a column
         //Slow, use sparringly
 
-        public string[] getCell(int column)
+        public string[] getColumn(int column)
         {
             List<List<string>> table = new List<List<string>>();
             List<string> output = new List<string>();
@@ -65,11 +65,6 @@ namespace CsvCode
         public int getDataframeSize()
         {
             return DataFrame.Count();
-        }
-
-        public List<string> getDataframe()
-        {
-            return DataFrame;
         }
         
         // CONVERSION FUNCTIONS
@@ -256,18 +251,18 @@ namespace CsvCode
             //df.AppendToCsv("B:\\Downloads\\test_best.csv");
 
             /* 1 MILLION DATA TEST
-             * DELETE AFTER
+             * DELETE AFTER */
 
             var watch = new System.Diagnostics.Stopwatch();
             watch.Start();
             CsvDataframe df = new CsvDataframe();
-            for(int i = 0; i < 1000000; i++)
+            for(int i = 0; i < 1050000; i++)
             {
                 List<string> s = new List<string>();
 
-                for(int j = 0; j < 5; j++)
+                for(int j = 0; j < 30; j++)
                 {
-                    s.Add(String.Format("Insert {0}", j));
+                    s.Add("ABCDEFGHIJ");
                 }
                 string[] temp = df.ListToArray(s);
                 string x = df.ArrayToString(temp);
@@ -284,21 +279,15 @@ namespace CsvCode
             df.LoadFile("B:\\Downloads\\1mtest.csv");
             watch.Stop();
             Console.WriteLine("Elapsed Time for Reading: " + watch.ElapsedMilliseconds + "ms");
-            */
+
 
             //Get cell
-            var watch = new System.Diagnostics.Stopwatch();
             CsvDataframe csv = new CsvDataframe();
-            csv.LoadFile("B:\\Downloads\\test_best.csv");
+            csv.LoadFile("B:\\Downloads\\1mtest.csv");
 
-            watch.Start();
-            string[] temp = csv.getCell(1);
+            watch.Restart();
+            string[] temp2 = csv.getColumn(1);
             watch.Stop();
-            
-            foreach (string s in temp)
-            {
-                Console.WriteLine(s);
-            }
 
             Console.WriteLine("Elapsed time for get cell function: " + watch.ElapsedMilliseconds + "ms");
         }
